@@ -1,0 +1,88 @@
+import xlrd
+import tkinter
+import time
+
+#用户名数据库列表（示例）
+w1=tkinter.Tk()
+w1.title("登陆界面")
+#file的地址以及内容需要自定义
+pic=tkinter.PhotoImage(file="J:\\Python\\ui.png")
+pic_Label=tkinter.Label(w1,image=pic)
+pic_Label.pack()
+ui_Label=tkinter.Label(w1,text='欢迎使用脉搏图像查询系统',fg='firebrick',font=('黑体',12))
+ui_Label.place(relx=0.2,rely=0.1)
+v1 = tkinter.StringVar( )
+
+
+#定义查询函数
+def Pulse_dis( ):
+    #list1的用户名需要自定义
+    list1 = ['zhaoxin','AA']
+    def w2_exit( ):
+        w2.destroy( )
+    if v1.get( ) in list1:
+        w1.withdraw()
+        # 从excel读取脉搏数据
+        book = xlrd.open_workbook('J:\\Python\\test.xlsx', 'r')
+        table = book.sheet_by_name('Sheet1')
+        time_data = table.col_values(0)
+        pulse_data = table.col_values(1)
+        # 计算数据列表的长度
+        l = len(time_data)
+
+        # 建立图形窗口1
+        w2 = tkinter.Tk()
+        w2.title("脉搏图")
+        c = tkinter.Canvas(w2, width=1000, height=300)
+        c.pack()
+        # 建立x,y轴
+        x = c.create_line(50, 160, 970, 160, width=2, fill='cyan3')
+        y = c.create_line(50, 50, 50, 250, width=2, fill='cyan3')
+        # 设置箭头
+        x1 = c.create_line(960, 155, 970, 160, width=2, fill='cyan3')
+        x2 = c.create_line(960, 165, 970, 160, width=2, fill='cyan3')
+        y1 = c.create_line(45, 60, 50, 50, width=2, fill='cyan3')
+        y2 = c.create_line(50, 50, 55, 60, width=2, fill='cyan3')
+        # x,y轴的标题
+        text_y = c.create_text(50, 30, text='Pulse', font=("Times New Roman", 16, "bold"), fill='cyan3')
+        text_x = c.create_text(970, 180, text='Time', font=("Times New Roman", 16, "bold"), fill='cyan3')
+        #w2的退出按钮
+        def w2_exit():
+            w2.destroy()
+            w1.deiconify()
+        w2_exitButton = tkinter.Button(w2, text='返回登陆界面', fg='white', bg='skyblue', command=w2_exit)
+        w2_exitButton.place(relx=0.9, rely=0.1)
+
+        # 将读取到的数据绘制成脉搏
+        for i in range(0, l - 1):
+            c.create_line(time_data[i] * 100, 160 - pulse_data[i] * 100, time_data[i + 1] * 100,
+                          160 - pulse_data[i + 1] * 100,
+                          fill='red')
+            w2.update()
+            time.sleep(0.004)
+        tkinter.mainloop()
+    else:
+        error_Label=tkinter.Label(w1,text='用户名不存在！',fg='red')
+        error_Label.place(relx=0.75,rely=0.7)
+        e_name.delete(0,END)
+
+
+
+
+#用户名输入窗口
+name_Label=tkinter.Label(w1,text='姓名:',fg='white',bg='dodgerblue3')
+name_Label.place(relx=0.63,rely=0.5)
+e_name=tkinter.Entry(w1,textvariable=v1)
+e_name.place(relx=0.7,rely=0.5)
+
+#定义查询按钮
+enter_Button=tkinter.Button(w1,text='查询',command=Pulse_dis,fg='black',bg='dodgerblue')
+enter_Button.place(relx=0.75,rely=0.6)
+
+#定义退出按钮
+exit_Button=tkinter.Button(w1,text='退出',command=w1.quit,fg='black',bg='dodgerblue')
+exit_Button.place(relx=0.85,rely=0.6)
+
+
+
+tkinter.mainloop( )
