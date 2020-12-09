@@ -1,1 +1,1 @@
-Pulse_Display文件中的file数据必须为execle格式，第一列存储时间数据，第二列存储脉搏幅度数据。
+Pulse_Display文件中的file数据必须为execel格式，第一列存储时间数据，第二列存储脉搏幅度数据。
